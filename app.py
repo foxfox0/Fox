@@ -39,8 +39,8 @@ def start(message):
     L7N_ = types.InlineKeyboardMarkup()
     L7N_.row_width = 3
     L7N_.add(L7N6)
-    L7N_.add(L7N3, L7N2)
-    L7N_.add(L7N3, L7N4)
+    L7N_.add(L7N1)
+    L7N_.add(L7N4)
     
     bot.send_message(message.chat.id, reply_message, reply_markup=L7N_)
 
