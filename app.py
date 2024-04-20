@@ -4,7 +4,7 @@ import json
 from telebot import types
 import time
 
-token = '6547783651:AAHQQhrK-ntNrqYZklnB0-CDwxZyjJu6vEU'
+token = '6962701374:AAEd0KNVe4AtOLcV7WaJ5dgwaw2cEtqLpaA'
 bot = telebot.TeleBot(token)
 
 password1 = ""
