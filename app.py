@@ -1,6 +1,7 @@
 import telebot
 import subprocess
 import os
+import requests
 from telebot import types
 
 API_TOKEN = "7190365764:AAFgoBNdhwHhKbjFaxW4nClEc6Io6BdAN9E"
