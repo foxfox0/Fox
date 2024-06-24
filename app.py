@@ -4,7 +4,7 @@ import os
 import requests
 from telebot import types
 
-API_TOKEN = "7302759788:AAHFMBSTD1YHT8UGYraxKEw1kZwXxQCFhZQ"
+API_TOKEN = "7305632721:AAH4kmJaPN3YrqZNP_ZJCT1odt-Z_4lzF1c"
 bot = telebot.TeleBot(API_TOKEN)
 running_processes = {}
 all_files = []
