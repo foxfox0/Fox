@@ -1,22 +1,26 @@
 from flask import Flask, request
 import telebot
 from telebot import types
-import requests
-import hashlib
-import base64
 import subprocess
+import os
 
-API_TOKEN = "7322129706:AAGdb00ua3BHJ-92vZB3KqYTHOkHGqSkn_0"
+API_TOKEN = "7214131759:AAG7T9ePMwWVV4fn7BNvbwQWC9PSB3oh3X0"
 bot = telebot.TeleBot(API_TOKEN)
 running_processes = {}
 all_files = []
 MAX_RUNNING_FILES = 4
 
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "Bot is running!"
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     chat_id = message.chat.id
     first_name = message.from_user.first_name
-    reply_message = f"""
+    reply_message = """
 ╔━━━━━🧟‍♂WELCOME🧟‍♂━━━━━━╗
 
   💃𝐇𝐢 {first_name} 𝐢𝐧 𝐦𝐲 𝐁𝐨𝐭🥶
@@ -31,8 +35,9 @@ def send_welcome(message):
   [♻️] 𝗕𝗢𝗧 𝗕𝘆 @F_0_1X★👑★
 
 ╚━━━━━━━━━👑👑━━━━━━━━━╝
-"""
+""".format(first_name=first_name)
     bot.reply_to(message, reply_message)
+
 @bot.message_handler(content_types=['document'])
 def handle_docs(message):
     file_info = bot.get_file(message.document.file_id)
@@ -85,6 +90,9 @@ def callback_query(call):
         delete_file(call.message, file_name)
 
 def run_file(message, file_name):
+    global running_processes
+    global all_files
+    
     if file_name in running_processes:
         bot.reply_to(message, f"الملف {file_name} يعمل بالفعل.")
     elif len(running_processes) >= MAX_RUNNING_FILES:
@@ -95,6 +103,7 @@ def run_file(message, file_name):
         bot.reply_to(message, f"تم تشغيل الملف {file_name}.\n\n{get_user_info(message)}")
 
 def stop_file(message, file_name):
+    global running_processes
     if file_name in running_processes:
         process = running_processes[file_name]
         process.terminate()
@@ -104,6 +113,7 @@ def stop_file(message, file_name):
         bot.reply_to(message, f"الملف {file_name} لا يعمل حاليا.")
 
 def restart_file(message, file_name):
+    global running_processes
     if file_name in running_processes:
         process = running_processes[file_name]
         process.terminate()
@@ -115,6 +125,8 @@ def restart_file(message, file_name):
         bot.reply_to(message, f"الملف {file_name} لا يعمل حاليا.")
 
 def delete_file(message, file_name):
+    global all_files
+    global running_processes
     if file_name in all_files:
         if file_name in running_processes:
             process = running_processes[file_name]
@@ -128,6 +140,7 @@ def delete_file(message, file_name):
 
 @bot.message_handler(commands=['list_running'])
 def list_running_files(message):
+    global running_processes
     if running_processes:
         running_files = "\n".join(running_processes.keys())
         bot.reply_to(message, f"الملفات التي تعمل حاليا:\n{running_files}")
@@ -136,6 +149,7 @@ def list_running_files(message):
 
 @bot.message_handler(commands=['list_all'])
 def list_all_files(message):
+    global all_files
     if all_files:
         all_files_list = "\n".join(all_files)
         bot.reply_to(message, f"جميع الملفات:\n{all_files_list}")
@@ -146,11 +160,15 @@ def list_all_files(message):
 def user_info(message):
     info = get_user_info(message)
     bot.reply_to(message, info)
+
 def check_errors():
+    global running_processes
     for file_name, process in list(running_processes.items()):
-        if process.poll() is not None: 
+        if process.poll() is not None:
             stdout, stderr = process.communicate()
             if stderr:
                 bot.send_message(user_id, f"حدث خطأ أثناء تشغيل الملف {file_name}:\n{stderr.decode()}")
 
-bot.polling()
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
+
