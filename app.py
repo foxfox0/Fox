@@ -1,30 +1,12 @@
+from flask import Flask, request
 import telebot
-import subprocess
-import os
 from telebot import types
 import requests
-import re
-from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
-import time
-import json
 import hashlib
-import pyfiglet
-import urllib3
-import calendar
-import termcolor
 import base64
-import threading
-import random
-import uuid
-import string
-import webbrowser
-import unicodedata
-import emoji
-from flask import Flask
-import xml.etree.ElementTree as ET
-from fake_useragent import UserAgent
-API_TOKEN = "7031371553:AAGfzQ2Eg9vAhgAhSCtcQFaUjRpDr8kCeoo"
+import subprocess
+
+API_TOKEN = "7322129706:AAGdb00ua3BHJ-92vZB3KqYTHOkHGqSkn_0"
 bot = telebot.TeleBot(API_TOKEN)
 running_processes = {}
 all_files = []
@@ -171,5 +153,4 @@ def check_errors():
             if stderr:
                 bot.send_message(user_id, f"حدث خطأ أثناء تشغيل الملف {file_name}:\n{stderr.decode()}")
 
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
+bot.polling()
